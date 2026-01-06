@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+
 import sqlite3
 from database import init_db
 
@@ -22,9 +23,20 @@ def add_student():
     )
     conn.commit()
     conn.close()
-
     return f"Student {name} saved permanently!<br><a href='/'>Go back</a>"
 
+
+@app.route("/students")
+def view_students():
+    conn = sqlite3.connect("students.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT name, marks FROM students")
+    students = cursor.fetchall()
+    conn.close()
+    return render_template("students.html", students=students)
+
+
+    
 if __name__ == '__main__':
     app.run(debug=True)
 
