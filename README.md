@@ -18,3 +18,5 @@ to help students manage basic academic data.
 To build a complete, working web application
 as part of my job preparation.
                           
+## progress
+Basic Flask app with student form and SQLite database integration.
