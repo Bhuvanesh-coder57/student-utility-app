@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request
+import sqlite3
+from database import init_db
 
 app = Flask(__name__)
-
-students = []  # Temporary in-memory storage
+init_db()
 
 @app.route('/')
 def home():
@@ -12,8 +13,17 @@ def home():
 def add_student():
     name = request.form['name']
     marks = request.form['marks']
-    students.append({'name': name, 'marks': marks})
-    return f"Student {name} added with marks {marks}!<br><a href='/'>Go back</a>"
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO students (name, marks) VALUES (?, ?)",
+        (name, marks)
+    )
+    conn.commit()
+    conn.close()
+
+    return f"Student {name} saved permanently!<br><a href='/'>Go back</a>"
 
 if __name__ == '__main__':
     app.run(debug=True)
