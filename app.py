@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, redirect, request
 
 import sqlite3
 from database import init_db
@@ -26,17 +26,27 @@ def add_student():
     return f"Student {name} saved permanently!<br><a href='/'>Go back</a>"
 
 
-@app.route("/students")
+@app.route("/students") 
 def view_students():
     conn = sqlite3.connect("students.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT name, marks FROM students")
+    cursor.execute("SELECT id, name, marks FROM students")
     students = cursor.fetchall()
     conn.close()
     return render_template("students.html", students=students)
 
 
-    
+@app.route("/delete/<int:id>")
+def delete_student(id):
+    conn = sqlite3.connect("students.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM students WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect("/students")
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 
