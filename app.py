@@ -32,8 +32,12 @@ def view_students():
     cursor = conn.cursor()
     cursor.execute("SELECT id, name, marks FROM students")
     students = cursor.fetchall()
-    conn.close()
-    return render_template("students.html", students=students)
+    total_no_students= len(students)
+    total=total_no_students
+
+    return render_template("students.html", students=students, total=total_no_students)
+
+
 
 
 @app.route("/delete/<int:id>")

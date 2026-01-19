@@ -20,3 +20,4 @@ as part of my job preparation.
                           
 ## progress
 Basic Flask app with student form and SQLite database integration.
+added route to display students from SQLite database using Flask and Jinja templates
