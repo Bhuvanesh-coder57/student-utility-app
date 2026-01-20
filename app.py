@@ -32,11 +32,43 @@ def view_students():
     cursor = conn.cursor()
     cursor.execute("SELECT id, name, marks FROM students")
     students = cursor.fetchall()
-    total_no_students= len(students)
-    total=total_no_students
 
-    return render_template("students.html", students=students, total=total_no_students)
+    total_no_students = len(students)
 
+    total_marks = 0
+
+    student_with_grades = []
+
+    for student in students:
+        marks = int(student[2])
+        total_marks += marks
+
+        if marks >= 90:
+            grade = "A"
+        elif marks >= 75:
+            grade = "B"
+        elif marks >= 50:
+            grade = "C"
+        else:
+            grade = "Fail"
+
+        student_with_grades.append((student[0], student[1], marks, grade))
+
+    if total_no_students > 0:
+        average = int(total_marks / total_no_students)
+    else:
+        average = 0
+
+    conn.close()
+
+    return render_template(
+        "students.html",
+        students=student_with_grades,
+        total=total_no_students,
+        average=average
+    )
+
+   
 
 
 
